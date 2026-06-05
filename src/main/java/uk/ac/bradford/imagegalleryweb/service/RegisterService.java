@@ -20,6 +20,7 @@ public class RegisterService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
+        user.setEnabled(true);
         userRepository.save(user);
     }
 }
