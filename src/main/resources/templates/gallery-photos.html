@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gallery Photos</title>
+</head>
+<body>
+    <h1 th:text="'Photos in: ' + ${gallery.name}"></h1>
+
+    <a th:href="@{/galleries}">Back to Galleries</a>
+
+    <h2>Upload Photo</h2>
+    <form th:action="@{/galleries/{id}/photos/upload(id=${gallery.id})}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Photos</h2>
+    <div th:if="${#lists.isEmpty(photos)}">
+        <p>No photos uploaded yet.</p>
+    </div>
+
+    <div th:each="photo : ${photos}">
+        <p th:text="${photo.fileName}"></p>
+        <img th:src="@{${photo.filePath}}" alt="Photo" width="200">
+        <form th:action="@{/galleries/{galleryId}/photos/{photoId}/delete(galleryId=${gallery.id}, photoId=${photo.id})}" method="post">
+            <button type="submit">Delete Photo</button>
+        </form>
+    </div>
+</body>
+</html>

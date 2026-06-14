@@ -22,6 +22,7 @@
                 <td th:text="${gallery.name}"></td>
                 <td th:text="${gallery.description}"></td>
                 <td>
+                    <a th:href="@{/galleries/{id}/photos(id=${gallery.id})}">View Photos</a>
                     <a th:href="@{/galleries/edit/{id}(id=${gallery.id})}">Edit</a>
                     <a th:href="@{/galleries/delete/{id}(id=${gallery.id})}">Delete</a>
                 </td>

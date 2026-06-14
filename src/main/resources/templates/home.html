@@ -8,6 +8,7 @@
 <h1>Home</h1>
 
 <p>Welcome, <span th:text="${username}">user</span></p>
+<a th:href="@{/galleries}">My Galleries</a>
 
 <form th:action="@{/logout}" method="post">
     <button type="submit">Logout</button>

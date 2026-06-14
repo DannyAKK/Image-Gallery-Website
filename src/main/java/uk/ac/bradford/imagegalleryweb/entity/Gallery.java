@@ -1,6 +1,8 @@
 package uk.ac.bradford.imagegalleryweb.entity;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "galleries")
@@ -19,6 +21,9 @@ public class Gallery {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "gallery", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Photo> photos = new ArrayList<>();
 
     public Gallery() {
     }
@@ -55,5 +60,13 @@ public class Gallery {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 }
