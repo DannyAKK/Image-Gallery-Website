@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gallery Form</title>
+</head>
+<body>
+    <h1 th:text="${gallery.id == null} ? 'Create Gallery' : 'Edit Gallery'"></h1>
+
+    <form th:action="@{/galleries/save}" th:object="${gallery}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label>Name:</label>
+            <input type="text" th:field="*{name}" required />
+        </div>
+
+        <div>
+            <label>Description:</label>
+            <textarea th:field="*{description}"></textarea>
+        </div>
+
+        <button type="submit">Save</button>
+    </form>
+
+    <a th:href="@{/galleries}">Back to Galleries</a>
+</body>
+</html>

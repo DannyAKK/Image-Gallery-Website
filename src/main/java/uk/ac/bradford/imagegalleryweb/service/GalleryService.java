@@ -1,0 +1,37 @@
+package uk.ac.bradford.imagegalleryweb.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import uk.ac.bradford.imagegalleryweb.entity.Gallery;
+import uk.ac.bradford.imagegalleryweb.entity.User;
+import uk.ac.bradford.imagegalleryweb.repository.GalleryRepository;
+
+@Service
+public class GalleryService {
+
+    private final GalleryRepository galleryRepository;
+
+    public GalleryService(GalleryRepository galleryRepository) {
+        this.galleryRepository = galleryRepository;
+    }
+
+    public List<Gallery> getGalleriesByUser(User user) {
+        return galleryRepository.findByUser(user);
+    }
+
+    public Optional<Gallery> getGalleryByIdAndUser(Long id, User user) {
+        return galleryRepository.findByIdAndUser(id, user);
+    }
+
+    public Gallery saveGallery(Gallery gallery) {
+        return galleryRepository.save(gallery);
+    }
+
+    public void deleteGallery(Long id, User user) {
+        galleryRepository.findByIdAndUser(id, user)
+                .ifPresent(galleryRepository::delete);
+    }
+}
