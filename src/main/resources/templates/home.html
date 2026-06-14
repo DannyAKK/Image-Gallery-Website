@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Home</title>
     <meta charset="UTF-8">
-    <title>Image Gallery</title>
 </head>
 <body>
-    <h1>Image Gallery Website</h1>
-    <p>This is the public homepage.</p>
+<h1>Home</h1>
+
+<p>Welcome, <span th:text="${username}">user</span></p>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
 </body>
 </html>
