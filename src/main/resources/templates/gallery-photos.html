@@ -2,29 +2,130 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Gallery Photos</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <h1 th:text="'Photos in: ' + ${gallery.name}"></h1>
+    <div class="page-container">
+        <div class="top-bar">
+            <h1 th:text="'Photos in: ' + ${gallery.name}"></h1>
+            <a class="btn secondary-btn" th:href="@{/galleries}">Back to Galleries</a>
+        </div>
 
-    <a th:href="@{/galleries}">Back to Galleries</a>
+        <div class="card">
+            <h2>Upload Photo</h2>
+            <form th:action="@{/galleries/{id}/photos/upload(id=${gallery.id})}" method="post" enctype="multipart/form-data" class="upload-form">
+                <input type="file" name="file" accept="image/*" required>
+                <button type="submit" class="btn primary-btn">Upload</button>
+            </form>
+        </div>
 
-    <h2>Upload Photo</h2>
-    <form th:action="@{/galleries/{id}/photos/upload(id=${gallery.id})}" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required>
-        <button type="submit">Upload</button>
-    </form>
+        <div class="section-heading">
+            <h2>Photos</h2>
+        </div>
 
-    <h2>Photos</h2>
-    <div th:if="${#lists.isEmpty(photos)}">
-        <p>No photos uploaded yet.</p>
+        <div th:if="${#lists.isEmpty(photos)}" class="card empty-card">
+            <p>No photos uploaded yet.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(photos)}">
+
+            <!-- Slideshow -->
+            <div class="slideshow-container card">
+                <h2>Slideshow</h2>
+                <div class="slideshow">
+                    <div class="slideshow-slide" th:each="photo, iterStat : ${photos}"
+                         th:classappend="${iterStat.first} ? ' active' : ''">
+                        <img th:src="@{${photo.filePath}}" alt="Slideshow photo" class="slideshow-image">
+                    </div>
+                </div>
+                <div class="slideshow-controls">
+                    <button class="btn secondary-btn" onclick="changeSlide(-1)">&#10094; Prev</button>
+                    <span id="slideCounter" class="slide-counter"></span>
+                    <button class="btn secondary-btn" onclick="changeSlide(1)">Next &#10095;</button>
+                </div>
+            </div>
+
+            <!-- Thumbnail grid -->
+            <div class="photo-grid">
+                <div class="photo-card" th:each="photo : ${photos}">
+                    <img
+                        th:src="@{${photo.thumbnailPath}}"
+                        alt="Photo thumbnail"
+                        class="photo-image"
+                        th:data-fullsrc="@{${photo.filePath}}"
+                        onclick="openModal(this)"
+                        style="cursor: pointer;">
+                    <div class="photo-content">
+                        <p class="photo-name" th:text="${photo.fileName}"></p>
+                        <form th:action="@{/galleries/{galleryId}/photos/{photoId}/delete(galleryId=${gallery.id}, photoId=${photo.id})}" method="post">
+                            <button type="submit" class="btn delete-btn">Delete Photo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div th:each="photo : ${photos}">
-        <p th:text="${photo.fileName}"></p>
-        <img th:src="@{${photo.filePath}}" alt="Photo" width="200">
-        <form th:action="@{/galleries/{galleryId}/photos/{photoId}/delete(galleryId=${gallery.id}, photoId=${photo.id})}" method="post">
-            <button type="submit">Delete Photo</button>
-        </form>
+    <!-- Full image modal -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <img id="modalImage" src="" alt="Full image">
+        </div>
     </div>
+
+    <script>
+        // --- Slideshow ---
+        let currentSlide = 0;
+        let autoplayTimer;
+        const slides = document.querySelectorAll('.slideshow-slide');
+        const counter = document.getElementById('slideCounter');
+
+        function showSlide(index) {
+            if (slides.length === 0) return;
+            slides.forEach(s => s.classList.remove('active'));
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            counter.textContent = (currentSlide + 1) + ' / ' + slides.length;
+        }
+
+        function changeSlide(direction) {
+            resetAutoplay();
+            showSlide(currentSlide + direction);
+        }
+
+        function startAutoplay() {
+            autoplayTimer = setInterval(() => showSlide(currentSlide + 1), 3000);
+        }
+
+        function resetAutoplay() {
+            clearInterval(autoplayTimer);
+            startAutoplay();
+        }
+
+        if (slides.length > 0) {
+            showSlide(0);
+            startAutoplay();
+        }
+
+        // --- Modal ---
+        function openModal(img) {
+            const fullSrc = img.getAttribute('data-fullsrc');
+            document.getElementById('modalImage').src = fullSrc;
+            document.getElementById('imageModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+            document.getElementById('modalImage').src = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+    </script>
 </body>
 </html>

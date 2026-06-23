@@ -2,32 +2,35 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>My Galleries</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <h1>My Galleries</h1>
+    <div class="page-container">
+        <div class="top-bar">
+            <h1>My Galleries</h1>
+            <div class="top-actions">
+                <a class="btn secondary-btn" th:href="@{/home}">Back to Home</a>
+                <a class="btn primary-btn" th:href="@{/galleries/new}">Create New Gallery</a>
+            </div>
+        </div>
 
-    <a th:href="@{/home}">Back to Home</a>
-    <a th:href="@{/galleries/new}">Create New Gallery</a>
+        <div th:if="${#lists.isEmpty(galleries)}" class="empty-message">
+            <p>You have not created any galleries yet.</p>
+        </div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="gallery : ${galleries}">
-                <td th:text="${gallery.name}"></td>
-                <td th:text="${gallery.description}"></td>
-                <td>
-                    <a th:href="@{/galleries/{id}/photos(id=${gallery.id})}">View Photos</a>
-                    <a th:href="@{/galleries/edit/{id}(id=${gallery.id})}">Edit</a>
-                    <a th:href="@{/galleries/delete/{id}(id=${gallery.id})}">Delete</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <div th:unless="${#lists.isEmpty(galleries)}" class="gallery-grid">
+            <div class="gallery-card card" th:each="gallery : ${galleries}">
+                <h2 th:text="${gallery.name}"></h2>
+                <p class="gallery-description" th:text="${gallery.description}"></p>
+
+                <div class="card-actions">
+                    <a class="btn primary-btn" th:href="@{/galleries/{id}/photos(id=${gallery.id})}">View Photos</a>
+                    <a class="btn edit-btn" th:href="@{/galleries/edit/{id}(id=${gallery.id})}">Edit</a>
+                    <a class="btn delete-btn" th:href="@{/galleries/delete/{id}(id=${gallery.id})}">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
