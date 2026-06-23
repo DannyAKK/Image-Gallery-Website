@@ -1,6 +1,6 @@
 # Image Gallery Web Application
 
-A Spring Boot web application that allows registered users to create photo galleries and upload images. Built as part of a university placement project at the University of Bradford.
+A Spring Boot web application that allows registered users to create photo galleries and upload images. Built as part of a university placement project at the University of Bradford for the company The Curve
 
 ---
 
@@ -12,7 +12,7 @@ A Spring Boot web application that allows registered users to create photo galle
 - Automatic thumbnail generation on upload (300x300, aspect ratio preserved)
 - Slideshow view with automatic 3-second transitions and manual prev/next controls
 - Click thumbnails to view full size images in a modal overlay
-- Gallery and photo ownership — users can only manage their own content
+- Gallery and photo ownership users can only manage their own content
 - Custom error pages for 404, 403 and 500 errors
 
 ---
@@ -38,7 +38,7 @@ A Spring Boot web application that allows registered users to create photo galle
 - Java 21 or higher
 - Maven 3.8 or higher
 
-No other installation is needed — H2 database is embedded and starts automatically.
+No other installation is needed as H2 database is embedded and starts automatically.
 
 ---
 
@@ -105,7 +105,7 @@ uploads/              - Uploaded images stored here at runtime (excluded from gi
 
 ## H2 Database Console
 
-The H2 in-memory database console is available at:
+The H2 in memory database console is available at:
 
 ```
 http://localhost:8080/h2-console
