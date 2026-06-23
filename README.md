@@ -1,6 +1,6 @@
 # Image Gallery Web Application
 
-A Spring Boot web application that allows registered users to create photo galleries and upload images. Built as part of a university placement project at the University of Bradford for the company The Curve
+A Spring Boot web application that allows registered users to create photo galleries and upload images. Built as part of a university placement project at the University of Bradford for the company, 'The Curve'.
 
 ---
 
