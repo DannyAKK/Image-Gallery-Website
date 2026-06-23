@@ -3,15 +3,22 @@
 <head>
     <title>Home</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Home</h1>
+    <div class="page-container">
+        <div class="card hero-card">
+            <h1>Home</h1>
+            <p class="subtitle">Welcome, <span th:text="${username}">user</span></p>
 
-<p>Welcome, <span th:text="${username}">user</span></p>
-<a th:href="@{/galleries}">My Galleries</a>
+            <div class="button-row">
+                <a class="btn primary-btn" th:href="@{/galleries}">My Galleries</a>
+            </div>
 
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Logout</button>
-</form>
+            <form th:action="@{/logout}" method="post" class="inline-form">
+                <button type="submit" class="btn secondary-btn">Logout</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

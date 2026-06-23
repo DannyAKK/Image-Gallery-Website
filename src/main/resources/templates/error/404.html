@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Page Not Found</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="page-container narrow-page" style="text-align: center; padding-top: 80px;">
+        <div class="card hero-card">
+            <h1 style="font-size: 72px; color: #2563eb; margin-bottom: 8px;">404</h1>
+            <h2>Page Not Found</h2>
+            <p class="subtitle">Sorry, the page you are looking for does not exist or has been moved.</p>
+            <a class="btn primary-btn" th:href="@{/home}">Go Back Home</a>
+        </div>
+    </div>
+</body>
+</html>
