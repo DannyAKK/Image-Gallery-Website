@@ -8,6 +8,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -96,16 +97,29 @@ public class GalleryController {
 
         if (!file.isEmpty()) {
             String uploadDir = System.getProperty("user.dir") + "/uploads/";
+            String thumbDir  = System.getProperty("user.dir") + "/uploads/thumbnails/";
             Files.createDirectories(Paths.get(uploadDir));
+            Files.createDirectories(Paths.get(thumbDir));
 
             String originalFilename = file.getOriginalFilename();
-            String savedFileName = UUID.randomUUID() + "_" + originalFilename;
-            Path filePath = Paths.get(uploadDir, savedFileName);
+            String savedFileName    = UUID.randomUUID() + "_" + originalFilename;
+            String thumbFileName    = "thumb_" + savedFileName;
+
+            Path filePath  = Paths.get(uploadDir, savedFileName);
+            Path thumbPath = Paths.get(thumbDir, thumbFileName);
+
             Files.write(filePath, file.getBytes());
+
+            // Generate precomputed thumbnail at 300x300 keeping aspect ratio
+            Thumbnails.of(filePath.toFile())
+                      .size(300, 300)
+                      .keepAspectRatio(true)
+                      .toFile(thumbPath.toFile());
 
             Photo photo = new Photo();
             photo.setFileName(savedFileName);
             photo.setFilePath("/uploads/" + savedFileName);
+            photo.setThumbnailPath("/uploads/thumbnails/" + thumbFileName);
             photo.setGallery(gallery);
 
             photoService.savePhoto(photo);
@@ -128,8 +142,10 @@ public class GalleryController {
         }
 
         String uploadDir = System.getProperty("user.dir") + "/uploads/";
-        Path filePath = Paths.get(uploadDir, photo.getFileName());
-        Files.deleteIfExists(filePath);
+        String thumbDir  = System.getProperty("user.dir") + "/uploads/thumbnails/";
+
+        Files.deleteIfExists(Paths.get(uploadDir, photo.getFileName()));
+        Files.deleteIfExists(Paths.get(thumbDir, "thumb_" + photo.getFileName()));
 
         photoService.deletePhoto(photoId);
 

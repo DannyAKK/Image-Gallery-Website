@@ -16,6 +16,9 @@ public class Photo {
     @Column(nullable = false)
     private String filePath;
 
+    @Column
+    private String thumbnailPath;
+
     @ManyToOne
     @JoinColumn(name = "gallery_id", nullable = false)
     private Gallery gallery;
@@ -23,9 +26,10 @@ public class Photo {
     public Photo() {
     }
 
-    public Photo(String fileName, String filePath, Gallery gallery) {
+    public Photo(String fileName, String filePath, String thumbnailPath, Gallery gallery) {
         this.fileName = fileName;
         this.filePath = filePath;
+        this.thumbnailPath = thumbnailPath;
         this.gallery = gallery;
     }
 
@@ -47,6 +51,14 @@ public class Photo {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 
     public Gallery getGallery() {
