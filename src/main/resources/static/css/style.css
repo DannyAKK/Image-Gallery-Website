@@ -48,6 +48,12 @@ a {
     width: 100%;
 }
 
+.home-card {
+    text-align: center;
+    padding: 48px 32px;
+    margin-top: 60px;
+}
+
 h1, h2 {
     margin-top: 0;
     color: #1f2937;
@@ -84,8 +90,21 @@ h1, h2 {
     margin-top: 16px;
 }
 
+.home-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+}
+
 .inline-form {
     margin-top: 15px;
+}
+
+.no-margin {
+    margin: 0;
 }
 
 .form-layout {
@@ -385,7 +404,8 @@ textarea:focus {
 
     .top-actions,
     .card-actions,
-    .upload-form {
+    .upload-form,
+    .home-actions {
         flex-direction: column;
         align-items: stretch;
     }
@@ -410,6 +430,12 @@ textarea:focus {
     .slideshow-controls {
         flex-direction: column;
         gap: 10px;
+    }
+
+    .home-actions .btn,
+    .home-actions form,
+    .home-actions form button {
+        width: 100%;
     }
 
     .modal-content img {

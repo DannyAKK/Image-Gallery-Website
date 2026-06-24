@@ -6,18 +6,18 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <div class="page-container">
-        <div class="card hero-card">
+    <div class="page-container narrow-page">
+        <div class="card hero-card home-card">
             <h1>Home</h1>
-            <p class="subtitle">Welcome, <span th:text="${username}">user</span></p>
+            <p class="subtitle" th:text="'Welcome, ' + ${username}"></p>
 
-            <div class="button-row">
+            <div class="home-actions">
                 <a class="btn primary-btn" th:href="@{/galleries}">My Galleries</a>
-            </div>
 
-            <form th:action="@{/logout}" method="post" class="inline-form">
-                <button type="submit" class="btn secondary-btn">Logout</button>
-            </form>
+                <form th:action="@{/logout}" method="post" class="inline-form no-margin">
+                    <button type="submit" class="btn secondary-btn">Logout</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>
