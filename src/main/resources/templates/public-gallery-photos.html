@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Gallery Photos</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="page-container">
+        <div class="top-bar">
+            <h1 th:text="'Photos in: ' + ${gallery.name}"></h1>
+
+            <div class="top-actions">
+                <a class="btn secondary-btn" th:href="@{/galleries/public}">
+                    Back to Galleries
+                </a>
+
+                <!-- Logged-in user shortcut -->
+                <a sec:authorize="isAuthenticated()"
+                   class="btn primary-btn"
+                   th:href="@{/galleries}">
+                    My Galleries
+                </a>
+
+                <!-- Logged-out user shortcut -->
+                <a sec:authorize="!isAuthenticated()"
+                   class="btn primary-btn"
+                   th:href="@{/login}">
+                    Login to Upload
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(photos)}" class="card empty-card">
+            <p>No photos uploaded yet.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(photos)}" class="photo-grid">
+            <div class="photo-card" th:each="photo : ${photos}">
+                <img
+                    th:src="@{${photo.thumbnailPath}}"
+                    alt="Photo thumbnail"
+                    class="photo-image"
+                    th:data-fullsrc="@{${photo.filePath}}"
+                    onclick="openModal(this)">
+            </div>
+        </div>
+    </div>
+
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" type="button" onclick="closeModal()">✕</button>
+            <img id="modalImage" src="" alt="Full image">
+        </div>
+    </div>
+
+    <script>
+        function openModal(img) {
+            const fullSrc = img.getAttribute('data-fullsrc');
+            document.getElementById('modalImage').src = fullSrc;
+            document.getElementById('imageModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+            document.getElementById('modalImage').src = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

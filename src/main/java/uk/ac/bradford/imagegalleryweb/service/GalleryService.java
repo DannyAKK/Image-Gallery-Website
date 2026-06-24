@@ -19,6 +19,16 @@ public class GalleryService {
         this.galleryRepository = galleryRepository;
     }
 
+    // Gets all galleries for public viewing.
+    public List<Gallery> getAllGalleries() {
+        return galleryRepository.findAll();
+    }
+
+    // Gets one gallery by id for public viewing.
+    public Optional<Gallery> getGalleryById(Long id) {
+        return galleryRepository.findById(id);
+    }
+
     // Gets all galleries for one user.
     public List<Gallery> getGalleriesByUser(User user) {
         return galleryRepository.findByUser(user);

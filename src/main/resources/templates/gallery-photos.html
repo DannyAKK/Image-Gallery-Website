@@ -4,6 +4,7 @@
     <title>Gallery Photos</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css">
 </head>
 <body>
     <div class="page-container">
@@ -13,12 +14,32 @@
             <a class="btn secondary-btn" th:href="@{/galleries}">Back to Galleries</a>
         </div>
 
+        <!-- Flash messages -->
+        <div th:if="${successMessage}" class="flash-message flash-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="flash-message flash-error" th:text="${errorMessage}"></div>
+
         <!-- Upload form -->
         <div class="card">
             <h2>Upload Photo</h2>
-            <form th:action="@{/galleries/{id}/photos/upload(id=${gallery.id})}" method="post" enctype="multipart/form-data" class="upload-form">
-                <input type="file" name="file" accept="image/*" required>
-                <button type="submit" class="btn primary-btn">Upload</button>
+            <form th:action="@{/galleries/{id}/photos/upload(id=${gallery.id})}" method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                <input type="file" name="file" id="fileInput" accept="image/*" required>
+                <p class="upload-help">Choose an image, crop it if you want, then upload it.</p>
+
+                <div id="cropContainer" class="crop-container hidden">
+                    <div class="crop-preview-wrapper">
+                        <img id="cropImage" src="" alt="Image preview for cropping">
+                    </div>
+
+                    <div class="crop-actions">
+                        <button type="button" class="btn secondary-btn" id="cropBtn">Apply Crop</button>
+                        <button type="button" class="btn secondary-btn" id="resetBtn">Reset</button>
+                        <button type="submit" class="btn primary-btn">Upload Cropped Photo</button>
+                    </div>
+                </div>
+
+                <div id="normalUploadActions" class="crop-actions">
+                    <button type="submit" class="btn primary-btn">Upload Without Cropping</button>
+                </div>
             </form>
         </div>
 
@@ -44,9 +65,9 @@
                     </div>
                 </div>
                 <div class="slideshow-controls">
-                    <button class="btn secondary-btn" onclick="changeSlide(-1)">&#10094; Prev</button>
+                    <button class="btn secondary-btn" type="button" onclick="changeSlide(-1)">&#10094; Prev</button>
                     <span id="slideCounter" class="slide-counter"></span>
-                    <button class="btn secondary-btn" onclick="changeSlide(1)">Next &#10095;</button>
+                    <button class="btn secondary-btn" type="button" onclick="changeSlide(1)">Next &#10095;</button>
                 </div>
             </div>
 
@@ -74,18 +95,18 @@
     <!-- Image modal -->
     <div id="imageModal" class="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <button class="modal-close" type="button" onclick="closeModal()">✕</button>
             <img id="modalImage" src="" alt="Full image">
         </div>
     </div>
 
+    <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
     <script>
         let currentSlide = 0;
         let autoplayTimer;
         const slides = document.querySelectorAll('.slideshow-slide');
         const counter = document.getElementById('slideCounter');
 
-        /* Shows the current slide. */
         function showSlide(index) {
             if (slides.length === 0) return;
             slides.forEach(s => s.classList.remove('active'));
@@ -94,18 +115,15 @@
             counter.textContent = (currentSlide + 1) + ' / ' + slides.length;
         }
 
-        /* Moves to the next or previous slide. */
         function changeSlide(direction) {
             resetAutoplay();
             showSlide(currentSlide + direction);
         }
 
-        /* Starts automatic slideshow movement. */
         function startAutoplay() {
             autoplayTimer = setInterval(() => showSlide(currentSlide + 1), 3000);
         }
 
-        /* Restarts autoplay after manual change. */
         function resetAutoplay() {
             clearInterval(autoplayTimer);
             startAutoplay();
@@ -116,24 +134,98 @@
             startAutoplay();
         }
 
-        /* Opens the full image modal. */
         function openModal(img) {
             const fullSrc = img.getAttribute('data-fullsrc');
             document.getElementById('modalImage').src = fullSrc;
             document.getElementById('imageModal').style.display = 'flex';
         }
 
-        /* Closes the image modal. */
         function closeModal() {
             document.getElementById('imageModal').style.display = 'none';
             document.getElementById('modalImage').src = '';
         }
 
-        /* Keyboard controls. */
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
             if (e.key === 'ArrowLeft') changeSlide(-1);
             if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        const fileInput = document.getElementById('fileInput');
+        const cropContainer = document.getElementById('cropContainer');
+        const cropImage = document.getElementById('cropImage');
+        const cropBtn = document.getElementById('cropBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const normalUploadActions = document.getElementById('normalUploadActions');
+
+        let cropper = null;
+        let originalFile = null;
+
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            originalFile = file;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file.');
+                fileInput.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                cropImage.src = e.target.result;
+                cropContainer.classList.remove('hidden');
+                normalUploadActions.classList.add('hidden');
+
+                if (cropper) {
+                    cropper.destroy();
+                }
+
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: NaN,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    responsive: true,
+                    background: false
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        cropBtn.addEventListener('click', function() {
+            if (!cropper || !originalFile) return;
+
+            const canvas = cropper.getCroppedCanvas();
+
+            canvas.toBlob(function(blob) {
+                const croppedFile = new File(
+                    [blob],
+                    originalFile.name || 'cropped-image.jpg',
+                    { type: blob.type || originalFile.type, lastModified: Date.now() }
+                );
+
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(croppedFile);
+                fileInput.files = dataTransfer.files;
+
+                alert('Crop applied. Click "Upload Cropped Photo" to save it.');
+            }, originalFile.type || 'image/jpeg');
+        });
+
+        resetBtn.addEventListener('click', function() {
+            fileInput.value = '';
+            cropImage.src = '';
+            cropContainer.classList.add('hidden');
+            normalUploadActions.classList.remove('hidden');
+
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+
+            originalFile = null;
         });
     </script>
 </body>

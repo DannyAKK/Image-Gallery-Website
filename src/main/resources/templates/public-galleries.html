@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Public Galleries</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="page-container">
+        <div class="top-bar">
+            <h1>Public Galleries</h1>
+
+            <div class="top-actions">
+                <!-- Shown only to logged-in users -->
+                <a sec:authorize="isAuthenticated()"
+                   class="btn primary-btn"
+                   th:href="@{/galleries}">
+                    My Galleries
+                </a>
+
+                <!-- Shown only to logged-in users -->
+                <a sec:authorize="isAuthenticated()"
+                   class="btn secondary-btn"
+                   th:href="@{/galleries/new}">
+                    Create Gallery
+                </a>
+
+                <!-- Shown only to logged-out users -->
+                <a sec:authorize="!isAuthenticated()"
+                   class="btn primary-btn"
+                   th:href="@{/login}">
+                    Login
+                </a>
+
+                <!-- Shown only to logged-out users -->
+                <a sec:authorize="!isAuthenticated()"
+                   class="btn secondary-btn"
+                   th:href="@{/register}">
+                    Register
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(galleries)}" class="card empty-card">
+            <p>No galleries available yet.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(galleries)}" class="gallery-grid">
+            <div class="card gallery-card" th:each="gallery : ${galleries}">
+                <div>
+                    <h2 th:text="${gallery.name}"></h2>
+                    <p class="gallery-description" th:text="${gallery.description}"></p>
+                </div>
+
+                <div class="card-actions">
+                    <a class="btn primary-btn"
+                       th:href="@{/galleries/public/{id}/photos(id=${gallery.id})}">
+                        View Gallery
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

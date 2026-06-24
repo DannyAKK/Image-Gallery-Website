@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import uk.ac.bradford.imagegalleryweb.entity.Gallery;
 import uk.ac.bradford.imagegalleryweb.entity.Photo;
@@ -36,9 +37,28 @@ public class GalleryController {
     }
 
     // Helper method to get the currently logged-in user.
-    // This keeps gallery and photo actions tied to the correct account.
     private User getCurrentUser(Principal principal) {
         return userRepository.findByUsername(principal.getName()).orElseThrow();
+    }
+
+    // Public list of all galleries.
+    @GetMapping("/public")
+    public String publicGalleries(Model model) {
+        List<Gallery> galleries = galleryService.getAllGalleries();
+        model.addAttribute("galleries", galleries);
+        return "public-galleries";
+    }
+
+    // Public view of one gallery's photos.
+    @GetMapping("/public/{id}/photos")
+    public String publicGalleryPhotos(@PathVariable Long id, Model model) {
+        Gallery gallery = galleryService.getGalleryById(id).orElseThrow();
+        List<Photo> photos = photoService.getPhotosByGallery(gallery);
+
+        model.addAttribute("gallery", gallery);
+        model.addAttribute("photos", photos);
+
+        return "public-gallery-photos";
     }
 
     // Show only the galleries that belong to the logged-in user.
@@ -97,60 +117,70 @@ public class GalleryController {
     }
 
     // Upload a photo into the selected gallery.
-    // A smaller thumbnail is also generated so the gallery page loads faster.
     @PostMapping("/{id}/photos/upload")
     public String uploadPhoto(@PathVariable Long id,
                               @RequestParam("file") MultipartFile file,
-                              Principal principal) throws IOException {
+                              Principal principal,
+                              RedirectAttributes redirectAttributes) throws IOException {
         User user = getCurrentUser(principal);
         Gallery gallery = galleryService.getGalleryByIdAndUser(id, user).orElseThrow();
 
-        if (!file.isEmpty()) {
-            String uploadDir = System.getProperty("user.dir") + "/uploads/";
-            String thumbDir = System.getProperty("user.dir") + "/uploads/thumbnails/";
-            Files.createDirectories(Paths.get(uploadDir));
-            Files.createDirectories(Paths.get(thumbDir));
-
-            String originalFilename = file.getOriginalFilename();
-            String savedFileName = UUID.randomUUID() + "_" + originalFilename;
-            String thumbFileName = "thumb_" + savedFileName;
-
-            Path filePath = Paths.get(uploadDir, savedFileName);
-            Path thumbPath = Paths.get(thumbDir, thumbFileName);
-
-            Files.write(filePath, file.getBytes());
-
-            // Precompute the thumbnail once during upload instead of resizing every time in the browser.
-            Thumbnails.of(filePath.toFile())
-                    .size(300, 300)
-                    .keepAspectRatio(true)
-                    .toFile(thumbPath.toFile());
-
-            Photo photo = new Photo();
-            photo.setFileName(savedFileName);
-            photo.setFilePath("/uploads/" + savedFileName);
-            photo.setThumbnailPath("/uploads/thumbnails/" + thumbFileName);
-            photo.setGallery(gallery);
-
-            photoService.savePhoto(photo);
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please choose an image to upload.");
+            return "redirect:/galleries/" + id + "/photos";
         }
 
+        if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Only image files can be uploaded.");
+            return "redirect:/galleries/" + id + "/photos";
+        }
+
+        String uploadDir = System.getProperty("user.dir") + "/uploads/";
+        String thumbDir = System.getProperty("user.dir") + "/uploads/thumbnails/";
+        Files.createDirectories(Paths.get(uploadDir));
+        Files.createDirectories(Paths.get(thumbDir));
+
+        String originalFilename = file.getOriginalFilename();
+        String safeFileName = (originalFilename == null || originalFilename.isBlank()) ? "image.jpg" : originalFilename;
+        String savedFileName = UUID.randomUUID() + "_" + safeFileName;
+        String thumbFileName = "thumb_" + savedFileName;
+
+        Path filePath = Paths.get(uploadDir, savedFileName);
+        Path thumbPath = Paths.get(thumbDir, thumbFileName);
+
+        Files.write(filePath, file.getBytes());
+
+        Thumbnails.of(filePath.toFile())
+                .size(300, 300)
+                .keepAspectRatio(true)
+                .toFile(thumbPath.toFile());
+
+        Photo photo = new Photo();
+        photo.setFileName(savedFileName);
+        photo.setFilePath("/uploads/" + savedFileName);
+        photo.setThumbnailPath("/uploads/thumbnails/" + thumbFileName);
+        photo.setGallery(gallery);
+
+        photoService.savePhoto(photo);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Photo uploaded successfully.");
         return "redirect:/galleries/" + id + "/photos";
     }
 
     // Delete a photo only after checking that it belongs to the selected gallery.
-    // This stops one user from deleting photos from another user's gallery.
     @PostMapping("/{galleryId}/photos/{photoId}/delete")
     public String deletePhoto(@PathVariable Long galleryId,
                               @PathVariable Long photoId,
-                              Principal principal) throws IOException {
+                              Principal principal,
+                              RedirectAttributes redirectAttributes) throws IOException {
         User user = getCurrentUser(principal);
         Gallery gallery = galleryService.getGalleryByIdAndUser(galleryId, user).orElseThrow();
 
         Photo photo = photoService.getPhotoById(photoId).orElseThrow();
 
         if (!photo.getGallery().getId().equals(gallery.getId())) {
-            throw new IllegalArgumentException("Photo does not belong to this gallery");
+            redirectAttributes.addFlashAttribute("errorMessage", "That photo does not belong to this gallery.");
+            return "redirect:/galleries/" + galleryId + "/photos";
         }
 
         String uploadDir = System.getProperty("user.dir") + "/uploads/";
@@ -161,6 +191,7 @@ public class GalleryController {
 
         photoService.deletePhoto(photoId);
 
+        redirectAttributes.addFlashAttribute("successMessage", "Photo deleted successfully.");
         return "redirect:/galleries/" + galleryId + "/photos";
     }
 }

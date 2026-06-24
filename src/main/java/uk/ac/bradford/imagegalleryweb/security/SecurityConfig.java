@@ -3,6 +3,7 @@ package uk.ac.bradford.imagegalleryweb.security;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,9 +16,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                // Allow public pages, static files, uploads and the H2 console.
+                // Allow public pages, static files, uploaded files and the H2 console.
                 .requestMatchers(PathRequest.toH2Console()).permitAll()
-                .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**", "/uploads/thumbnails/**").permitAll()
+                .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+
+                // Public gallery viewing
+                .requestMatchers(HttpMethod.GET, "/galleries/public").permitAll()
+                .requestMatchers(HttpMethod.GET, "/galleries/public/*/photos").permitAll()
 
                 // Everything else requires the user to be logged in.
                 .anyRequest().authenticated()
