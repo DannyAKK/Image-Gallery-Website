@@ -8,21 +8,26 @@
 <body>
     <div class="page-container narrow-page">
         <div class="card">
+            <!-- Form title -->
             <h1 th:text="${gallery.id == null} ? 'Create Gallery' : 'Edit Gallery'"></h1>
 
+            <!-- Gallery form -->
             <form th:action="@{/galleries/save}" th:object="${gallery}" method="post" class="form-layout">
                 <input type="hidden" th:field="*{id}" />
 
+                <!-- Name field -->
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input id="name" type="text" th:field="*{name}" required />
                 </div>
 
+                <!-- Description field -->
                 <div class="form-group">
                     <label for="description">Description</label>
                     <textarea id="description" th:field="*{description}" rows="5"></textarea>
                 </div>
 
+                <!-- Form actions -->
                 <div class="button-row">
                     <button type="submit" class="btn primary-btn">Save</button>
                     <a class="btn secondary-btn" th:href="@{/galleries}">Back to Galleries</a>

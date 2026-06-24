@@ -17,6 +17,7 @@ public class CustomErrorController implements ErrorController {
         if (status != null) {
             int statusCode = Integer.parseInt(status.toString());
 
+            // Send users to a friendlier page instead of the default error screen.
             if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 return "error/404";
             } else if (statusCode == HttpStatus.FORBIDDEN.value()) {
@@ -26,6 +27,7 @@ public class CustomErrorController implements ErrorController {
             }
         }
 
+        // Fallback in case the status code is missing or something unexpected happens.
         return "error/500";
     }
 }

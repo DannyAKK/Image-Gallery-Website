@@ -35,10 +35,13 @@ public class GalleryController {
         this.userRepository = userRepository;
     }
 
+    // Helper method to get the currently logged-in user.
+    // This keeps gallery and photo actions tied to the correct account.
     private User getCurrentUser(Principal principal) {
         return userRepository.findByUsername(principal.getName()).orElseThrow();
     }
 
+    // Show only the galleries that belong to the logged-in user.
     @GetMapping
     public String listGalleries(Model model, Principal principal) {
         User user = getCurrentUser(principal);
@@ -47,12 +50,14 @@ public class GalleryController {
         return "galleries";
     }
 
+    // Open the form for creating a new gallery.
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("gallery", new Gallery());
         return "gallery-form";
     }
 
+    // Save a gallery and link it to the current user.
     @PostMapping("/save")
     public String saveGallery(@ModelAttribute("gallery") Gallery gallery, Principal principal) {
         User user = getCurrentUser(principal);
@@ -61,6 +66,7 @@ public class GalleryController {
         return "redirect:/galleries";
     }
 
+    // Only allow a user to edit their own gallery.
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model, Principal principal) {
         User user = getCurrentUser(principal);
@@ -69,6 +75,7 @@ public class GalleryController {
         return "gallery-form";
     }
 
+    // Delete only if the gallery belongs to the logged-in user.
     @GetMapping("/delete/{id}")
     public String deleteGallery(@PathVariable Long id, Principal principal) {
         User user = getCurrentUser(principal);
@@ -76,6 +83,7 @@ public class GalleryController {
         return "redirect:/galleries";
     }
 
+    // Show all photos inside one gallery owned by the current user.
     @GetMapping("/{id}/photos")
     public String viewGalleryPhotos(@PathVariable Long id, Model model, Principal principal) {
         User user = getCurrentUser(principal);
@@ -88,6 +96,8 @@ public class GalleryController {
         return "gallery-photos";
     }
 
+    // Upload a photo into the selected gallery.
+    // A smaller thumbnail is also generated so the gallery page loads faster.
     @PostMapping("/{id}/photos/upload")
     public String uploadPhoto(@PathVariable Long id,
                               @RequestParam("file") MultipartFile file,
@@ -97,24 +107,24 @@ public class GalleryController {
 
         if (!file.isEmpty()) {
             String uploadDir = System.getProperty("user.dir") + "/uploads/";
-            String thumbDir  = System.getProperty("user.dir") + "/uploads/thumbnails/";
+            String thumbDir = System.getProperty("user.dir") + "/uploads/thumbnails/";
             Files.createDirectories(Paths.get(uploadDir));
             Files.createDirectories(Paths.get(thumbDir));
 
             String originalFilename = file.getOriginalFilename();
-            String savedFileName    = UUID.randomUUID() + "_" + originalFilename;
-            String thumbFileName    = "thumb_" + savedFileName;
+            String savedFileName = UUID.randomUUID() + "_" + originalFilename;
+            String thumbFileName = "thumb_" + savedFileName;
 
-            Path filePath  = Paths.get(uploadDir, savedFileName);
+            Path filePath = Paths.get(uploadDir, savedFileName);
             Path thumbPath = Paths.get(thumbDir, thumbFileName);
 
             Files.write(filePath, file.getBytes());
 
-            // Generate precomputed thumbnail at 300x300 keeping aspect ratio
+            // Precompute the thumbnail once during upload instead of resizing every time in the browser.
             Thumbnails.of(filePath.toFile())
-                      .size(300, 300)
-                      .keepAspectRatio(true)
-                      .toFile(thumbPath.toFile());
+                    .size(300, 300)
+                    .keepAspectRatio(true)
+                    .toFile(thumbPath.toFile());
 
             Photo photo = new Photo();
             photo.setFileName(savedFileName);
@@ -128,6 +138,8 @@ public class GalleryController {
         return "redirect:/galleries/" + id + "/photos";
     }
 
+    // Delete a photo only after checking that it belongs to the selected gallery.
+    // This stops one user from deleting photos from another user's gallery.
     @PostMapping("/{galleryId}/photos/{photoId}/delete")
     public String deletePhoto(@PathVariable Long galleryId,
                               @PathVariable Long photoId,
@@ -142,7 +154,7 @@ public class GalleryController {
         }
 
         String uploadDir = System.getProperty("user.dir") + "/uploads/";
-        String thumbDir  = System.getProperty("user.dir") + "/uploads/thumbnails/";
+        String thumbDir = System.getProperty("user.dir") + "/uploads/thumbnails/";
 
         Files.deleteIfExists(Paths.get(uploadDir, photo.getFileName()));
         Files.deleteIfExists(Paths.get(thumbDir, "thumb_" + photo.getFileName()));

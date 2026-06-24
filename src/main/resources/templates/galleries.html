@@ -7,6 +7,7 @@
 </head>
 <body>
     <div class="page-container">
+        <!-- Top bar -->
         <div class="top-bar">
             <h1>My Galleries</h1>
             <div class="top-actions">
@@ -15,15 +16,18 @@
             </div>
         </div>
 
+        <!-- Empty message -->
         <div th:if="${#lists.isEmpty(galleries)}" class="empty-message">
             <p>You have not created any galleries yet.</p>
         </div>
 
+        <!-- Gallery list -->
         <div th:unless="${#lists.isEmpty(galleries)}" class="gallery-grid">
             <div class="gallery-card card" th:each="gallery : ${galleries}">
                 <h2 th:text="${gallery.name}"></h2>
                 <p class="gallery-description" th:text="${gallery.description}"></p>
 
+                <!-- Gallery actions -->
                 <div class="card-actions">
                     <a class="btn primary-btn" th:href="@{/galleries/{id}/photos(id=${gallery.id})}">View Photos</a>
                     <a class="btn edit-btn" th:href="@{/galleries/edit/{id}(id=${gallery.id})}">Edit</a>

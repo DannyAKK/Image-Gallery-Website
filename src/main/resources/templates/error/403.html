@@ -6,11 +6,17 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+    <!-- Error page -->
     <div class="page-container narrow-page" style="text-align: center; padding-top: 80px;">
         <div class="card hero-card">
+            <!-- Error code -->
             <h1 style="font-size: 72px; color: #dc2626; margin-bottom: 8px;">403</h1>
+
+            <!-- Message -->
             <h2>Access Denied</h2>
             <p class="subtitle">You do not have permission to view this page.</p>
+
+            <!-- Home button -->
             <a class="btn primary-btn" th:href="@{/home}">Go Back Home</a>
         </div>
     </div>

@@ -10,15 +10,19 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Stores the saved file name on disk.
     @Column(nullable = false)
     private String fileName;
 
+    // Path used to load the full image in the browser.
     @Column(nullable = false)
     private String filePath;
 
+    // Separate thumbnail path so the gallery can load smaller images faster.
     @Column
     private String thumbnailPath;
 
+    // Each photo belongs to one gallery.
     @ManyToOne
     @JoinColumn(name = "gallery_id", nullable = false)
     private Gallery gallery;

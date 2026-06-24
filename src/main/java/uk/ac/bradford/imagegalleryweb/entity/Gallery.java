@@ -12,16 +12,20 @@ public class Gallery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Gallery name is required.
     @Column(nullable = false)
     private String name;
 
+    // Extra text about the gallery.
     @Column(length = 1000)
     private String description;
 
+    // Links this gallery to one user.
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // A gallery can contain many photos.
     @OneToMany(mappedBy = "gallery", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Photo> photos = new ArrayList<>();
 

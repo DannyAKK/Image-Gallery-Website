@@ -10,12 +10,15 @@
         <div class="card auth-card">
             <h1>Register</h1>
 
+            <!-- Register form -->
             <form th:action="@{/register}" method="post" class="form-layout">
+                <!-- Username -->
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required>
                 </div>
 
+                <!-- Password -->
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
@@ -24,6 +27,7 @@
                 <button type="submit" class="btn primary-btn full-width-btn">Register</button>
             </form>
 
+            <!-- Login link -->
             <p class="auth-link">
                 <a th:href="@{/login}">Already have an account? Login</a>
             </p>

@@ -33,6 +33,7 @@ class GalleryServiceTest {
 
         List<Gallery> result = galleryService.getGalleriesByUser(user);
 
+        // Checks that the service returns the galleries linked to the user.
         assertEquals(1, result.size());
         verify(galleryRepository).findByUser(user);
     }
@@ -44,6 +45,7 @@ class GalleryServiceTest {
 
         Gallery result = galleryService.saveGallery(gallery);
 
+        // Confirms the gallery is saved and a result is returned.
         assertNotNull(result);
         verify(galleryRepository).save(gallery);
     }
@@ -56,6 +58,7 @@ class GalleryServiceTest {
 
         galleryService.deleteGallery(1L, user);
 
+        // Only deletes when the gallery belongs to the current user.
         verify(galleryRepository).delete(gallery);
     }
 
@@ -66,6 +69,7 @@ class GalleryServiceTest {
 
         galleryService.deleteGallery(1L, user);
 
+        // Prevents deletion if the gallery is not owned by that user.
         verify(galleryRepository, never()).delete(any());
     }
 
@@ -77,6 +81,7 @@ class GalleryServiceTest {
 
         Optional<Gallery> result = galleryService.getGalleryByIdAndUser(1L, user);
 
+        // Verifies that the gallery can be found for its owner.
         assertTrue(result.isPresent());
     }
 }

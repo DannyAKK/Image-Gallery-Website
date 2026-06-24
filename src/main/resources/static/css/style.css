@@ -1,7 +1,9 @@
+/* Includes padding and border inside element size. */
 * {
     box-sizing: border-box;
 }
 
+/* Main page style. */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -9,20 +11,24 @@ body {
     color: #222;
 }
 
+/* Removes underline from links. */
 a {
     text-decoration: none;
 }
 
+/* Main page width. */
 .page-container {
     width: 90%;
     max-width: 1100px;
     margin: 30px auto;
 }
 
+/* Narrower page layout. */
 .narrow-page {
     max-width: 700px;
 }
 
+/* Centers login and register pages. */
 .auth-page {
     max-width: 450px;
     min-height: 100vh;
@@ -31,6 +37,7 @@ a {
     justify-content: center;
 }
 
+/* Reusable card box. */
 .card {
     background-color: #ffffff;
     border-radius: 12px;
@@ -39,35 +46,42 @@ a {
     margin-bottom: 24px;
 }
 
+/* Intro card style. */
 .hero-card {
     text-align: center;
     padding: 40px 24px;
 }
 
+/* Card width for auth pages. */
 .auth-card {
     width: 100%;
 }
 
+/* Home page card. */
 .home-card {
     text-align: center;
     padding: 48px 32px;
     margin-top: 60px;
 }
 
+/* Main heading style. */
 h1, h2 {
     margin-top: 0;
     color: #1f2937;
 }
 
+/* Smaller text under headings. */
 .subtitle {
     color: #555;
     margin-bottom: 20px;
 }
 
+/* Section title spacing. */
 .section-heading {
     margin-bottom: 16px;
 }
 
+/* Top row layout. */
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -77,12 +91,14 @@ h1, h2 {
     margin-bottom: 24px;
 }
 
+/* Buttons at the top. */
 .top-actions {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
 }
 
+/* Row of buttons. */
 .button-row {
     display: flex;
     gap: 10px;
@@ -90,6 +106,7 @@ h1, h2 {
     margin-top: 16px;
 }
 
+/* Home page buttons. */
 .home-actions {
     display: flex;
     justify-content: center;
@@ -99,31 +116,37 @@ h1, h2 {
     margin-top: 28px;
 }
 
+/* Small form spacing. */
 .inline-form {
     margin-top: 15px;
 }
 
+/* Removes margin. */
 .no-margin {
     margin: 0;
 }
 
+/* Form layout. */
 .form-layout {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
+/* One form field block. */
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+/* Label style. */
 label {
     font-weight: bold;
     color: #374151;
 }
 
+/* Input and textarea style. */
 input,
 textarea {
     width: 100%;
@@ -134,12 +157,14 @@ textarea {
     font-family: Arial, sans-serif;
 }
 
+/* Changes input look when selected. */
 input:focus,
 textarea:focus {
     outline: none;
     border-color: #2563eb;
 }
 
+/* Upload form layout. */
 .upload-form {
     display: flex;
     gap: 12px;
@@ -147,6 +172,7 @@ textarea:focus {
     align-items: center;
 }
 
+/* Base button style. */
 .btn {
     border: none;
     border-radius: 8px;
@@ -157,46 +183,56 @@ textarea:focus {
     transition: 0.2s ease;
 }
 
+/* Makes button full width. */
 .full-width-btn {
     width: 100%;
 }
 
+/* Blue main button. */
 .primary-btn {
     background-color: #2563eb;
     color: #fff;
 }
 
+/* Darker on hover. */
 .primary-btn:hover {
     background-color: #1d4ed8;
 }
 
+/* Grey secondary button. */
 .secondary-btn {
     background-color: #6b7280;
     color: #fff;
 }
 
+/* Darker on hover. */
 .secondary-btn:hover {
     background-color: #4b5563;
 }
 
+/* Orange edit button. */
 .edit-btn {
     background-color: #f59e0b;
     color: #fff;
 }
 
+/* Darker on hover. */
 .edit-btn:hover {
     background-color: #d97706;
 }
 
+/* Red delete button. */
 .delete-btn {
     background-color: #dc2626;
     color: #fff;
 }
 
+/* Darker on hover. */
 .delete-btn:hover {
     background-color: #b91c1c;
 }
 
+/* Base message box. */
 .message {
     padding: 12px;
     border-radius: 8px;
@@ -204,25 +240,30 @@ textarea:focus {
     font-size: 14px;
 }
 
+/* Error message colours. */
 .error-message {
     background-color: #fee2e2;
     color: #b91c1c;
 }
 
+/* Success message colours. */
 .success-message {
     background-color: #dcfce7;
     color: #15803d;
 }
 
+/* Links under auth forms. */
 .auth-link {
     margin-top: 18px;
     text-align: center;
 }
 
+/* Auth link colour. */
 .auth-link a {
     color: #2563eb;
 }
 
+/* Grid for gallery cards. */
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
@@ -230,6 +271,7 @@ textarea:focus {
     justify-content: center;
 }
 
+/* One gallery card layout. */
 .gallery-card {
     display: flex;
     flex-direction: column;
@@ -238,12 +280,14 @@ textarea:focus {
     height: 100%;
 }
 
+/* Gallery description text. */
 .gallery-description {
     color: #555;
     margin-bottom: 16px;
     min-height: 40px;
 }
 
+/* Action buttons inside cards. */
 .card-actions {
     display: flex;
     justify-content: center;
@@ -252,6 +296,7 @@ textarea:focus {
     margin-top: 16px;
 }
 
+/* Grid for photos. */
 .photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 420px));
@@ -259,6 +304,7 @@ textarea:focus {
     justify-content: center;
 }
 
+/* One photo card. */
 .photo-card {
     background-color: #fff;
     border-radius: 12px;
@@ -266,6 +312,7 @@ textarea:focus {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
+/* Photo display area. */
 .photo-image {
     width: 100%;
     height: 260px;
@@ -275,16 +322,19 @@ textarea:focus {
     cursor: pointer;
 }
 
+/* Slight fade on hover. */
 .photo-image:hover {
     opacity: 0.88;
     transition: opacity 0.2s ease;
 }
 
+/* Photo text area. */
 .photo-content {
     padding: 16px;
     text-align: center;
 }
 
+/* File name text. */
 .photo-name {
     font-size: 14px;
     color: #555;
@@ -292,18 +342,20 @@ textarea:focus {
     word-break: break-word;
 }
 
+/* Empty state text. */
 .empty-card,
 .empty-message {
     text-align: center;
     color: #666;
 }
 
-/* Slideshow */
+/* Slideshow area. */
 .slideshow-container {
     margin-bottom: 32px;
     text-align: center;
 }
 
+/* Main slideshow box. */
 .slideshow {
     position: relative;
     width: 100%;
@@ -313,14 +365,17 @@ textarea:focus {
     margin-bottom: 16px;
 }
 
+/* Hides slides by default. */
 .slideshow-slide {
     display: none;
 }
 
+/* Shows active slide. */
 .slideshow-slide.active {
     display: block;
 }
 
+/* Slideshow image style. */
 .slideshow-image {
     width: 100%;
     height: 460px;
@@ -331,6 +386,7 @@ textarea:focus {
     transition: opacity 0.4s ease;
 }
 
+/* Slideshow buttons and counter. */
 .slideshow-controls {
     display: flex;
     justify-content: center;
@@ -339,6 +395,7 @@ textarea:focus {
     margin-top: 12px;
 }
 
+/* Slide number text. */
 .slide-counter {
     font-size: 15px;
     color: #555;
@@ -346,7 +403,7 @@ textarea:focus {
     text-align: center;
 }
 
-/* Modal */
+/* Dark background popup. */
 .modal {
     display: none;
     position: fixed;
@@ -357,6 +414,7 @@ textarea:focus {
     align-items: center;
 }
 
+/* Box inside popup. */
 .modal-content {
     position: relative;
     max-width: 90vw;
@@ -369,6 +427,7 @@ textarea:focus {
     justify-content: center;
 }
 
+/* Full image inside popup. */
 .modal-content img {
     max-width: 80vw;
     max-height: 80vh;
@@ -377,6 +436,7 @@ textarea:focus {
     display: block;
 }
 
+/* Close button. */
 .modal-close {
     position: absolute;
     top: 10px;
@@ -389,10 +449,12 @@ textarea:focus {
     line-height: 1;
 }
 
+/* Close button hover. */
 .modal-close:hover {
     color: #dc2626;
 }
 
+/* Mobile layout changes If uploaded via a host */
 @media (max-width: 600px) {
     .page-container {
         width: 94%;
@@ -402,6 +464,7 @@ textarea:focus {
         padding: 18px;
     }
 
+    /* Stacks button areas on small screens. */
     .top-actions,
     .card-actions,
     .upload-form,
@@ -418,6 +481,7 @@ textarea:focus {
         height: 200px;
     }
 
+    /* One column layout on mobile. */
     .gallery-grid,
     .photo-grid {
         grid-template-columns: 1fr;

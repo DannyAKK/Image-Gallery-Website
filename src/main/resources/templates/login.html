@@ -10,15 +10,19 @@
         <div class="card auth-card">
             <h1>Login</h1>
 
+            <!-- Status messages -->
             <p th:if="${param.error}" class="message error-message">Invalid username or password</p>
             <p th:if="${param.logout}" class="message success-message">You have been logged out</p>
 
+            <!-- Login form -->
             <form th:action="@{/login}" method="post" class="form-layout">
+                <!-- Username -->
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required>
                 </div>
 
+                <!-- Password -->
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
@@ -27,6 +31,7 @@
                 <button type="submit" class="btn primary-btn full-width-btn">Login</button>
             </form>
 
+            <!-- Register link -->
             <p class="auth-link">
                 <a th:href="@{/register}">Create an account</a>
             </p>

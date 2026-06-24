@@ -7,11 +7,13 @@
 </head>
 <body>
     <div class="page-container">
+        <!-- Top bar -->
         <div class="top-bar">
             <h1 th:text="'Photos in: ' + ${gallery.name}"></h1>
             <a class="btn secondary-btn" th:href="@{/galleries}">Back to Galleries</a>
         </div>
 
+        <!-- Upload form -->
         <div class="card">
             <h2>Upload Photo</h2>
             <form th:action="@{/galleries/{id}/photos/upload(id=${gallery.id})}" method="post" enctype="multipart/form-data" class="upload-form">
@@ -20,16 +22,18 @@
             </form>
         </div>
 
+        <!-- Photos heading -->
         <div class="section-heading">
             <h2>Photos</h2>
         </div>
 
+        <!-- Empty message -->
         <div th:if="${#lists.isEmpty(photos)}" class="card empty-card">
             <p>No photos uploaded yet.</p>
         </div>
 
+        <!-- Photo content -->
         <div th:unless="${#lists.isEmpty(photos)}">
-
             <!-- Slideshow -->
             <div class="slideshow-container card">
                 <h2>Slideshow</h2>
@@ -67,7 +71,7 @@
         </div>
     </div>
 
-    <!-- Full image modal -->
+    <!-- Image modal -->
     <div id="imageModal" class="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeModal()">✕</button>
@@ -76,12 +80,12 @@
     </div>
 
     <script>
-        // --- Slideshow ---
         let currentSlide = 0;
         let autoplayTimer;
         const slides = document.querySelectorAll('.slideshow-slide');
         const counter = document.getElementById('slideCounter');
 
+        /* Shows the current slide. */
         function showSlide(index) {
             if (slides.length === 0) return;
             slides.forEach(s => s.classList.remove('active'));
@@ -90,15 +94,18 @@
             counter.textContent = (currentSlide + 1) + ' / ' + slides.length;
         }
 
+        /* Moves to the next or previous slide. */
         function changeSlide(direction) {
             resetAutoplay();
             showSlide(currentSlide + direction);
         }
 
+        /* Starts automatic slideshow movement. */
         function startAutoplay() {
             autoplayTimer = setInterval(() => showSlide(currentSlide + 1), 3000);
         }
 
+        /* Restarts autoplay after manual change. */
         function resetAutoplay() {
             clearInterval(autoplayTimer);
             startAutoplay();
@@ -109,18 +116,20 @@
             startAutoplay();
         }
 
-        // --- Modal ---
+        /* Opens the full image modal. */
         function openModal(img) {
             const fullSrc = img.getAttribute('data-fullsrc');
             document.getElementById('modalImage').src = fullSrc;
             document.getElementById('imageModal').style.display = 'flex';
         }
 
+        /* Closes the image modal. */
         function closeModal() {
             document.getElementById('imageModal').style.display = 'none';
             document.getElementById('modalImage').src = '';
         }
 
+        /* Keyboard controls. */
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
             if (e.key === 'ArrowLeft') changeSlide(-1);

@@ -14,22 +14,27 @@ public class PhotoService {
 
     private final PhotoRepository photoRepository;
 
+    // Injects the photo repository.
     public PhotoService(PhotoRepository photoRepository) {
         this.photoRepository = photoRepository;
     }
 
+    // Gets all photos in one gallery.
     public List<Photo> getPhotosByGallery(Gallery gallery) {
         return photoRepository.findByGallery(gallery);
     }
 
+    // Saves one photo.
     public void savePhoto(Photo photo) {
         photoRepository.save(photo);
     }
 
+    // Gets one photo by id.
     public Optional<Photo> getPhotoById(Long id) {
         return photoRepository.findById(id);
     }
 
+    // Deletes one photo by id.
     public void deletePhoto(Long id) {
         photoRepository.deleteById(id);
     }

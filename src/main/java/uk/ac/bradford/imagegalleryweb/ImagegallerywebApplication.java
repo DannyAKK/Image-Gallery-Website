@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ImagegallerywebApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ImagegallerywebApplication.class, args);
-	}
+    public static void main(String[] args) {
 
+        // Starts the Spring Boot application.
+        SpringApplication.run(ImagegallerywebApplication.class, args);
+    }
 }

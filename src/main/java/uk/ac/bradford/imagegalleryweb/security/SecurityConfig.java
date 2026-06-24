@@ -15,14 +15,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
+                // Allow public pages, static files, uploads and the H2 console.
                 .requestMatchers(PathRequest.toH2Console()).permitAll()
-                .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**", "/uploads/thumbnails/**").permitAll()
+
+                // Everything else requires the user to be logged in.
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf
+                // CSRF is ignored for the H2 console so it can still be used during development.
                 .ignoringRequestMatchers(PathRequest.toH2Console())
             )
             .headers(headers -> headers
+                // Needed so the H2 console can be displayed in a frame.
                 .frameOptions(frame -> frame.sameOrigin())
             )
             .formLogin(form -> form
@@ -42,6 +47,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // BCrypt is used so passwords are stored securely instead of plain text.
         return new BCryptPasswordEncoder();
     }
 }

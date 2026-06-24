@@ -10,7 +10,11 @@ public class HomeController {
 
     @GetMapping("/home")
     public String showHomePage(Model model, Principal principal) {
+
+        // Gets the logged-in username.
         model.addAttribute("username", principal.getName());
+
+        // Opens home.html.
         return "home";
     }
 }

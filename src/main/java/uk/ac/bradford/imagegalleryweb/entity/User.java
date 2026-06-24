@@ -10,12 +10,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Username is required and must be unique.
     @Column(nullable = false, unique = true)
     private String username;
 
+    // Password is required.
     @Column(nullable = false)
     private String password;
 
+    // User account is enabled by default.
     private boolean enabled = true;
 
     public User() {

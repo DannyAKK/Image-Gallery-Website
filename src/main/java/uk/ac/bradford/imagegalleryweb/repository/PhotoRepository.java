@@ -8,5 +8,7 @@ import uk.ac.bradford.imagegalleryweb.entity.Gallery;
 import uk.ac.bradford.imagegalleryweb.entity.Photo;
 
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
+
+    // Gets all photos in one gallery.
     List<Photo> findByGallery(Gallery gallery);
 }
