@@ -1,6 +1,11 @@
+<img width="2160" height="1080" alt="image" src="https://github.com/user-attachments/assets/c8361b85-3432-42ab-a4b3-16cc55ff80af" />
+
+
+
+
 # Image Gallery Web Application
 
-A Spring Boot web application that allows registered users to create photo galleries and upload images. Built as part of a university placement project at the University of Bradford for the company, 'The Curve'.
+A Spring Boot web application that allows registered users to create photo galleries and upload images. Built as part of a placement technical test while at the at the University of Bradford for the company, 'The Curve'.
 
 ---
 
@@ -17,7 +22,7 @@ A Spring Boot web application that allows registered users to create photo galle
 - Automatic thumbnail generation on upload (300x300, aspect ratio preserved)
 - Slideshow view with automatic 3-second transitions and manual previous/next controls
 - Custom error pages for 404, 403 and 500 errors
-- Unit testing with JUnit 5 and Maven Wrappe
+- Unit testing with JUnit 5 and Maven Wrapper
 
 ---
 
@@ -34,81 +39,126 @@ A Spring Boot web application that allows registered users to create photo galle
 | Thumbnailator 0.4.20 | Thumbnail generation |
 | JUnit 5 + Mockito | Unit testing |
 | Maven | Build and dependency management |
+| Docker | Containerisation |
+| Docker Compose | Application packaging and startup |
 
 ---
 
 ## Requirements
 
-- Java 21 or higher
+- Docker Desktop
 
-No other installation is needed as H2 database is embedded and starts automatically.
+No separate Java or Maven installation is required when running with Docker, because the application is packaged inside a container and started through Docker Compose.
 
 ---
 
-## How to Run
+## How to Run with Docker
 
 1. Clone the repository:
-   ```
+   ```bash
    git clone https://github.com/DannyAKK/Image-Gallery-Website.git
    ```
 
 2. Navigate into the project folder:
-   ```
+   ```bash
    cd Image-Gallery-Website
    ```
 
-3. Build and run the application:
-   ```
-   .\mvnw.cmd spring-boot:run 
+3. Build and start the application:
+   ```bash
+   docker compose up --build
    ```
 
 4. Open your browser and go to:
-   ```
-   Login page: http://localhost:8080 
-   Public Galleries Page: http://localhost:8080/galleries/public 
+   ```text
+   Home/Login page: http://localhost:8080
+   Public Galleries page: http://localhost:8080/galleries/public
    ```
 
-5. Register a new account and start creating galleries.
+5. To stop the application:
+   ```bash
+   docker compose down or click 'CTRL & C'
+   ```
+
+---
+
+## Run in Background
+
+To run the application in detached mode:
+
+```bash
+docker compose up --build -d
+```
+
+To view logs:
+
+```bash
+docker compose logs -f
+```
+
+To stop the containers:
+
+```bash
+docker compose down
+```
+
+---
+
+## Running Without Docker
+
+If you want to run the application directly with Maven instead of Docker, use:
+
+### Windows
+```bash
+.\mvnw.cmd spring-boot:run
+```
+
+### macOS/Linux
+```bash
+./mvnw spring-boot:run
+```
+
+This method requires Java 21 to be installed locally.
 
 ---
 
 ## Running Tests
-On Windows:
 
+### Windows
 ```bash
 .\mvnw.cmd test
 ```
 
-On macOS/Linux:
-
+### macOS/Linux
 ```bash
 ./mvnw test
 ```
 
 Tests are run using JUnit 5 through the Maven Wrapper.
+
 ---
 
 ## Project Structure
 
-```
+```text
 src/
   main/
     java/uk/ac/bradford/imagegalleryweb/
-      config/         - Web MVC configuration (static resource handlers)
-      controller/     - HTTP request handlers (GalleryController, CustomErrorController)
-      entity/         - JPA database models (User, Gallery, Photo)
+      config/         - Web MVC configuration
+      controller/     - HTTP request handlers
+      entity/         - JPA database models
       repository/     - Spring Data JPA repository interfaces
       security/       - Spring Security configuration
-      service/        - Business logic (GalleryService, PhotoService)
+      service/        - Business logic
     resources/
       templates/      - Thymeleaf HTML templates
         error/        - Custom error pages (404, 403, 500)
-      static/
-        css/          - Stylesheet (style.css)
   test/
-    java/             - Unit tests (GalleryServiceTest)
+    java/             - Unit tests
 
-uploads/              - Uploaded images stored here at runtime (excluded from git)
+uploads/              - Uploaded images stored here at runtime
+Dockerfile            - Docker image definition
+compose.yaml          - Docker Compose configuration
 ```
 
 ---
@@ -117,7 +167,7 @@ uploads/              - Uploaded images stored here at runtime (excluded from gi
 
 The H2 in memory database console is available at:
 
-```
+```text
 http://localhost:8080/h2-console
 ```
 
@@ -131,7 +181,7 @@ Use the following connection settings:
 
 ## Notes
 
-- The H2 database is in memory, all data resets when the application restarts
-- Uploaded images and thumbnails are stored in the `uploads/` folder in the project root
-- The `uploads/` folder is excluded from version control via `.gitignore`
-- Thumbnail images are stored in `uploads/thumbnails/`
+- The H2 database is in memory, so all data resets when the application restarts.
+- Uploaded images and thumbnails are stored in the `uploads/` folder.
+- Thumbnail images are stored in `uploads/thumbnails/`.
+- Docker packaging is provided through `Dockerfile` and `compose.yaml`, so the application can be run consistently on different machines.
