@@ -7,13 +7,17 @@ A Spring Boot web application that allows registered users to create photo galle
 ## Features
 
 - User registration and login with secure BCrypt password hashing
-- Create, edit and delete personal photo galleries
-- Upload photos to galleries
+- Public gallery browsing so any visitor can view photo galleries
+- Registered users can create, edit and delete their own galleries
+- Registered users can upload, edit and delete their own photos
+- Gallery and photo ownership rules so only the owner can manage their own content
+- Only the gallery owner can add, edit or delete photos within that gallery
+- Thumbnail gallery view for uploaded photos
+- Click thumbnails to view full-size images in a modal overlay
 - Automatic thumbnail generation on upload (300x300, aspect ratio preserved)
-- Slideshow view with automatic 3-second transitions and manual prev/next controls
-- Click thumbnails to view full size images in a modal overlay
-- Gallery and photo ownership users can only manage their own content
+- Slideshow view with automatic 3-second transitions and manual previous/next controls
 - Custom error pages for 404, 403 and 500 errors
+- Unit testing with JUnit 5 and Maven Wrappe
 
 ---
 
@@ -36,7 +40,6 @@ A Spring Boot web application that allows registered users to create photo galle
 ## Requirements
 
 - Java 21 or higher
-- Maven 3.8 or higher
 
 No other installation is needed as H2 database is embedded and starts automatically.
 
@@ -46,22 +49,23 @@ No other installation is needed as H2 database is embedded and starts automatica
 
 1. Clone the repository:
    ```
-   git clone <your-repo-url>
+   git clone https://github.com/DannyAKK/Image-Gallery-Website.git
    ```
 
 2. Navigate into the project folder:
    ```
-   cd imagegalleryweb
+   cd Image-Gallery-Website
    ```
 
 3. Build and run the application:
    ```
-   mvn spring-boot:run
+   .\mvnw.cmd spring-boot:run 
    ```
 
 4. Open your browser and go to:
    ```
-   http://localhost:8080
+   Login page: http://localhost:8080 
+   Public Galleries Page: http://localhost:8080/galleries/public 
    ```
 
 5. Register a new account and start creating galleries.
@@ -69,13 +73,19 @@ No other installation is needed as H2 database is embedded and starts automatica
 ---
 
 ## Running Tests
+On Windows:
 
+```bash
+.\mvnw.cmd test
 ```
-mvn test
+
+On macOS/Linux:
+
+```bash
+./mvnw test
 ```
 
-Tests cover the `GalleryService` layer using JUnit 5 and Mockito, verifying gallery retrieval, saving and ownership based deletion.
-
+Tests are run using JUnit 5 through the Maven Wrapper.
 ---
 
 ## Project Structure
@@ -121,7 +131,7 @@ Use the following connection settings:
 
 ## Notes
 
-- The H2 database is in-memory, all data resets when the application restarts
+- The H2 database is in memory, all data resets when the application restarts
 - Uploaded images and thumbnails are stored in the `uploads/` folder in the project root
 - The `uploads/` folder is excluded from version control via `.gitignore`
 - Thumbnail images are stored in `uploads/thumbnails/`
